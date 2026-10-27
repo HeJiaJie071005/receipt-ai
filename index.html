@@ -33,33 +33,81 @@
   <!-- ============ SCAN TAB ============ -->
   <section id="tab-scan" class="panel active">
     <div class="card">
-      <h2 data-i18n="keyTitle">🔑 免费 Gemini API Key（只需设置一次）</h2>
-      <p class="muted" data-i18n="keyDesc">ReceiptAI 使用 Google Gemini 免费套餐识别票据。Key 只保存在你的浏览器本地，不会上传到任何服务器。</p>
-      <ol class="steps">
-        <li><span data-i18n="keyStep1">打开</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> <span data-i18n="keyStep1b">，用 Google 账号登录</span></li>
-        <li data-i18n="keyStep2">点击「Create API key」生成一个免费 Key（无需绑卡）</li>
-        <li data-i18n="keyStep3">把 Key 粘贴到下面，点「保存」</li>
-      </ol>
-      <div class="row">
-        <input id="apiKeyInput" type="password" placeholder="AIza..." autocomplete="off">
-        <button id="saveKeyBtn" class="btn btn-primary" data-i18n="save">保存</button>
-        <button id="clearKeyBtn" class="btn btn-ghost" data-i18n="clearKey">清除 Key</button>
-        <button id="toggleKeyBtn" class="btn btn-ghost">👁️</button>
+      <h2 data-i18n="keyTitle">🔑 AI 模型设置（只需设置一次）</h2>
+      <p class="muted" data-i18n="keyDesc">选一个 AI 模型，填入它的 Key。Key 只保存在你的浏览器本地，只发给对应模型官方接口。</p>
+      <div class="form-grid">
+        <label><span data-i18n="providerLabel">AI 模型</span>
+          <select id="providerSelect">
+            <option value="gemini">Google Gemini（免费 · 读图）</option>
+            <option value="qwen">通义千问 Qwen（国内 · 读图）</option>
+            <option value="deepseek">DeepSeek（国内 · 粘贴文字）</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="provider-block" id="prov-gemini">
+        <ol class="steps">
+          <li><span data-i18n="keyStep1">打开</span> <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio</a> <span data-i18n="keyStep1b">，用 Google 账号登录</span></li>
+          <li data-i18n="keyStep2">点击「Create API key」生成一个免费 Key（无需绑卡）</li>
+          <li data-i18n="keyStep3">把 Key 粘贴到下面，点「保存」</li>
+        </ol>
+        <div class="row">
+          <input id="apiKeyInput-gemini" type="password" placeholder="AIza..." autocomplete="off">
+          <button class="btn btn-primary save-key-btn" data-provider="gemini" data-i18n="save">保存</button>
+          <button class="btn btn-ghost clear-key-btn" data-provider="gemini" data-i18n="clearKey">清除 Key</button>
+          <button class="btn btn-ghost toggle-key-btn" data-provider="gemini">👁️</button>
+        </div>
+      </div>
+
+      <div class="provider-block hidden" id="prov-qwen">
+        <ol class="steps">
+          <li><span data-i18n="keyStep1">打开</span> <a href="https://bailian.console.aliyun.com/" target="_blank" rel="noopener">阿里云百炼控制台</a> <span data-i18n="keyQwenStep1b">，用阿里云账号登录</span></li>
+          <li data-i18n="keyQwenStep2">在「API-KEY 管理」里创建一个 Key（新用户有免费额度）</li>
+          <li data-i18n="keyStep3">把 Key 粘贴到下面，点「保存」</li>
+        </ol>
+        <div class="row">
+          <input id="apiKeyInput-qwen" type="password" placeholder="sk-..." autocomplete="off">
+          <button class="btn btn-primary save-key-btn" data-provider="qwen" data-i18n="save">保存</button>
+          <button class="btn btn-ghost clear-key-btn" data-provider="qwen" data-i18n="clearKey">清除 Key</button>
+          <button class="btn btn-ghost toggle-key-btn" data-provider="qwen">👁️</button>
+        </div>
+      </div>
+
+      <div class="provider-block hidden" id="prov-deepseek">
+        <p class="hint warn">⚠️ <span data-i18n="deepseekNote">DeepSeek 官方接口目前不支持读图。请把小票或订单上的文字粘贴到下面，DeepSeek 会帮你整理成记账数据。</span></p>
+        <ol class="steps">
+          <li><span data-i18n="keyStep1">打开</span> <a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">DeepSeek 开放平台</a> <span data-i18n="keyDeepseekStep1b">，登录后创建 API Key</span></li>
+          <li data-i18n="keyStep3">把 Key 粘贴到下面，点「保存」</li>
+        </ol>
+        <div class="row">
+          <input id="apiKeyInput-deepseek" type="password" placeholder="sk-..." autocomplete="off">
+          <button class="btn btn-primary save-key-btn" data-provider="deepseek" data-i18n="save">保存</button>
+          <button class="btn btn-ghost clear-key-btn" data-provider="deepseek" data-i18n="clearKey">清除 Key</button>
+          <button class="btn btn-ghost toggle-key-btn" data-provider="deepseek">👁️</button>
+        </div>
       </div>
       <p class="hint" id="keyHint"></p>
     </div>
 
-    <div class="card">
-      <h2 data-i18n="uploadTitle">🧾 上传票据照片</h2>
-      <div id="dropZone" class="dropzone" tabindex="0">
-        <div class="dz-icon">📸</div>
-        <p data-i18n="dropHint">把票据照片拖到这里，或点击选择文件，也可直接 Ctrl+V 粘贴截图</p>
-        <input id="fileInput" type="file" accept="image/*" hidden>
-        <button id="pickFileBtn" class="btn btn-primary" data-i18n="chooseFile">选择图片</button>
+    <div class="card" id="uploadCard">
+      <h2 id="uploadCardTitle">🧾 上传票据照片</h2>
+      <div id="imageUploadWrap">
+        <div id="dropZone" class="dropzone" tabindex="0">
+          <div class="dz-icon">📸</div>
+          <p data-i18n="dropHint">把票据照片拖到这里，或点击选择文件，也可直接 Ctrl+V 粘贴截图</p>
+          <input id="fileInput" type="file" accept="image/*" hidden>
+          <button id="pickFileBtn" class="btn btn-primary" data-i18n="chooseFile">选择图片</button>
+        </div>
+        <div id="previewWrap" class="preview-wrap hidden">
+          <img id="previewImg" alt="receipt preview">
+          <button id="removeImgBtn" class="btn btn-ghost" data-i18n="removeImg">换一张</button>
+        </div>
       </div>
-      <div id="previewWrap" class="preview-wrap hidden">
-        <img id="previewImg" alt="receipt preview">
-        <button id="removeImgBtn" class="btn btn-ghost" data-i18n="removeImg">换一张</button>
+      <div id="deepseekTextWrap" class="hidden">
+        <p class="hint warn">⚠️ <span data-i18n="deepseekNote2">DeepSeek 接口不支持读图，请把小票或订单文字粘贴在下面。</span></p>
+        <label class="ds-label"><span data-i18n="deepseekTextLabel">粘贴小票 / 订单文字</span>
+          <textarea id="deepseekText" rows="8" data-i18n-ph="deepseekTextPh" placeholder="例如：好又多超市 2026-10-27&#10;可乐 330ml ×6 3.5元 = 21元&#10;方便面 ×10 4元 = 40元&#10;合计 61元"></textarea>
+        </label>
       </div>
       <button id="recognizeBtn" class="btn btn-primary btn-big" data-i18n="recognize">✨ 识别记账</button>
       <div id="scanStatus" class="status"></div>
@@ -99,8 +147,8 @@
     <div class="card">
       <details>
         <summary data-i18n="apiDocsTitle">🔌 API 接口文档（给你的下单系统调用）</summary>
-        <p class="muted" data-i18n="apiDocsDesc">下面是识别一张票据的完整请求。把 <code>YOUR_API_KEY</code> 换成你的免费 Key，把图片转成 base64 填进去即可。照片只会发给 Google Gemini，不经过任何第三方服务器。</p>
-        <h4>Endpoint</h4>
+        <p class="muted" data-i18n="apiDocsDesc">下面是三个模型的识别请求（Gemini / Qwen 读图，DeepSeek 读文字）。把 YOUR_API_KEY 换成对应模型的 Key 即可。图片或文字只发给对应模型官方接口，不经过任何第三方服务器。</p>
+        <h4>Google Gemini</h4>
         <pre><code>POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=YOUR_API_KEY</code></pre>
         <h4>cURL <button class="btn btn-ghost btn-sm" data-copy="curlExample" data-i18n="copy">复制</button></h4>
         <pre><code id="curlExample">curl -X POST "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=YOUR_API_KEY" \
@@ -128,6 +176,65 @@
       }) });
   const data = await res.json();
   return JSON.parse(data.candidates[0].content.parts[0].text);
+}</code></pre>
+        <h4>通义千问 Qwen（OpenAI 兼容接口 · 读图）</h4>
+        <pre><code>POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+Authorization: Bearer YOUR_API_KEY</code></pre>
+        <h4>cURL <button class="btn btn-ghost btn-sm" data-copy="curlExampleQwen" data-i18n="copy">复制</button></h4>
+        <pre><code id="curlExampleQwen">curl -X POST "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen-vl-max",
+    "messages": [{"role": "user", "content": [
+      {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,BASE64_IMAGE_HERE"}},
+      {"type": "text", "text": "Extract the receipt into JSON: {\"merchant\": string, \"date\": \"YYYY-MM-DD\", \"items\": [{\"name\": string, \"qty\": number, \"unit_price\": number, \"amount\": number}], \"subtotal\": number, \"tax\": number, \"total\": number, \"currency\": string, \"category\": string}. Reply with JSON only."}
+    ]}]
+  }'</code></pre>
+        <h4>JavaScript (fetch) <button class="btn btn-ghost btn-sm" data-copy="jsExampleQwen" data-i18n="copy">复制</button></h4>
+        <pre><code id="jsExampleQwen">async function recognizeReceiptQwen(base64Image, apiKey) {
+  const res = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: 'qwen-vl-max',
+      messages: [{ role: 'user', content: [
+        { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } },
+        { type: 'text', text: 'Extract the receipt into JSON: {"merchant": string, "date": "YYYY-MM-DD", "items": [{"name": string, "qty": number, "unit_price": number, "amount": number}], "subtotal": number, "tax": number, "total": number, "currency": string, "category": string}. Reply with JSON only.' }
+      ] }]
+    })
+  });
+  const data = await res.json();
+  return JSON.parse(data.choices[0].message.content.replace(/```json|```/g, '').trim());
+}</code></pre>
+        <h4>DeepSeek（文字模式 · 不支持读图）</h4>
+        <p class="muted" data-i18n="apiDeepseekNote">DeepSeek 官方接口目前不接受图片。请先把小票/订单文字用 OCR 或手动抄录成文本，再调用：</p>
+        <pre><code>POST https://api.deepseek.com/v1/chat/completions
+Authorization: Bearer YOUR_API_KEY</code></pre>
+        <h4>cURL <button class="btn btn-ghost btn-sm" data-copy="curlExampleDeepseek" data-i18n="copy">复制</button></h4>
+        <pre><code id="curlExampleDeepseek">curl -X POST "https://api.deepseek.com/v1/chat/completions" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "deepseek-chat",
+    "messages": [{"role": "user", "content": "Extract the receipt text into JSON: {\"merchant\": string, \"date\": \"YYYY-MM-DD\", \"items\": [{\"name\": string, \"qty\": number, \"unit_price\": number, \"amount\": number}], \"subtotal\": number, \"tax\": number, \"total\": number, \"currency\": string, \"category\": string}. Reply with JSON only.\n\nReceipt text:\nPASTED_RECEIPT_TEXT_HERE"}],
+    "temperature": 0.1,
+    "response_format": {"type": "json_object"}
+  }'</code></pre>
+        <h4>JavaScript (fetch) <button class="btn btn-ghost btn-sm" data-copy="jsExampleDeepseek" data-i18n="copy">复制</button></h4>
+        <pre><code id="jsExampleDeepseek">async function recognizeReceiptDeepSeek(pastedText, apiKey) {
+  const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [{ role: 'user', content: 'Extract the receipt text into JSON: {"merchant": string, "date": "YYYY-MM-DD", "items": [{"name": string, "qty": number, "unit_price": number, "amount": number}], "subtotal": number, "tax": number, "total": number, "currency": string, "category": string}. Reply with JSON only.\n\nReceipt text:\n' + pastedText }],
+      temperature: 0.1,
+      response_format: { type: 'json_object' }
+    })
+  });
+  const data = await res.json();
+  return JSON.parse(data.choices[0].message.content);
 }</code></pre>
         <h4 data-i18n="respTitle">返回示例</h4>
         <pre><code>{
@@ -325,7 +432,7 @@
 </div>
 
 <footer>
-  <p data-i18n="footer">ReceiptAI · 数据只存在你的浏览器本地 · API Key 只发给 Google Gemini · 免费套餐 · MIT 开源</p>
+  <p data-i18n="footer">ReceiptAI · 数据只存在你的浏览器本地 · API Key 只发给对应模型官方接口 · MIT 开源</p>
 </footer>
 
 <script src="vendor/html2canvas.min.js"></script>

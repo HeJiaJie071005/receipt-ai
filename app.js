@@ -9,13 +9,24 @@ const I18N = {
     subtitle: 'AI 拍照记账 · 小店账本 · 免费大模型',
     keyNotSet: '未设置 API Key', keySet: 'API Key 已设置',
     tabScan: '拍照记账', tabAdd: '记一笔', tabLedger: '账本', tabInventory: '商品库存', tabStats: '统计',
-    keyTitle: '🔑 免费 Gemini API Key（只需设置一次）',
-    keyDesc: 'ReceiptAI 使用 Google Gemini 免费套餐识别票据。Key 只保存在你的浏览器本地，不会上传到任何服务器。',
+    keyTitle: '🔑 AI 模型设置（只需设置一次）',
+    keyDesc: '选一个 AI 模型，填入它的 Key。Key 只保存在你的浏览器本地，只发给对应模型官方接口。',
+    providerLabel: 'AI 模型',
+    provGeminiOpt: 'Google Gemini（免费 · 读图）',
+    provQwenOpt: '通义千问 Qwen（国内 · 读图）',
+    provDeepseekOpt: 'DeepSeek（国内 · 粘贴文字）',
     keyStep1: '打开', keyStep1b: '，用 Google 账号登录',
+    keyQwenStep1b: '，用阿里云账号登录',
+    keyQwenStep2: '在「API-KEY 管理」里创建一个 Key（新用户有免费额度）',
+    keyDeepseekStep1b: '，登录后创建 API Key',
     keyStep2: '点击「Create API key」生成一个免费 Key（无需绑卡）',
     keyStep3: '把 Key 粘贴到下面，点「保存」',
+    deepseekNote: 'DeepSeek 官方接口目前不支持读图。请把小票或订单上的文字粘贴到下面，DeepSeek 会帮你整理成记账数据。',
+    deepseekNote2: 'DeepSeek 接口不支持读图，请把小票或订单文字粘贴在下面。',
+    deepseekTextLabel: '粘贴小票 / 订单文字',
+    deepseekTextPh: '例如：好又多超市 2026-10-27\n可乐 330ml ×6 3.5元 = 21元\n方便面 ×10 4元 = 40元\n合计 61元',
     save: '保存', clearKey: '清除 Key',
-    uploadTitle: '🧾 上传票据照片', dropHint: '把票据照片拖到这里，或点击选择文件，也可直接 Ctrl+V 粘贴截图',
+    uploadTitle: '🧾 上传票据照片', uploadTitleText: '🧾 粘贴小票 / 订单文字', dropHint: '把票据照片拖到这里，或点击选择文件，也可直接 Ctrl+V 粘贴截图',
     chooseFile: '选择图片', removeImg: '换一张', recognize: '✨ 识别记账',
     resultTitle: '✅ 识别结果（可修改，确认无误后保存）',
     fMerchant: '商家', fDate: '日期', fType: '类型', fCategory: '分类', fTotal: '总金额 (¥)',
@@ -23,7 +34,8 @@ const I18N = {
     itemsTitle: '明细', thItem: '品名', thQty: '数量', thUnit: '单价', thAmt: '金额', addItem: '加一行',
     saveToLedger: '保存到账本',
     apiDocsTitle: '🔌 API 接口文档（给你的下单系统调用）',
-    apiDocsDesc: '下面是识别一张票据的完整请求。把 YOUR_API_KEY 换成你的免费 Key，把图片转成 base64 填进去即可。照片只会发给 Google Gemini，不经过任何第三方服务器。',
+    apiDocsDesc: '下面是三个模型的识别请求（Gemini / Qwen 读图，DeepSeek 读文字）。把 YOUR_API_KEY 换成对应模型的 Key 即可。图片或文字只发给对应模型官方接口，不经过任何第三方服务器。',
+    apiDeepseekNote: 'DeepSeek 官方接口目前不接受图片。请先把小票/订单文字用 OCR 或手动抄录成文本，再调用：',
     copy: '复制', respTitle: '返回示例',
     manualTitle: '✏️ 手动记一笔', fAmount: '金额 (¥)', saveEntry: '保存这笔',
     calcTitle: '🧮 利润计算器', calcDesc: '输入卖出价和成本价，自动算利润和利润率。',
@@ -43,7 +55,7 @@ const I18N = {
     profitSummaryTitle: '💰 利润汇总',
     receiptTitle: '电子小票', receiptThanks: '谢谢惠顾，欢迎再来！',
     downloadImg: '下载图片', print: '打印', close: '关闭', cancel: '取消', editTitle: '编辑记录',
-    footer: 'ReceiptAI · 数据只存在你的浏览器本地 · API Key 只发给 Google Gemini · 免费套餐 · MIT 开源',
+    footer: 'ReceiptAI · 数据只存在你的浏览器本地 · API Key 只发给对应模型官方接口 · MIT 开源',
     sumIncome: '本月总收入', sumExpense: '本月总支出', sumNet: '净利润', sumMargin: '整体利润率',
     sumSales: '总销售额', sumCost: '总成本', sumGross: '毛利润',
     noData: '暂无数据', lowStock: '库存不足', soldOut: '已售罄',
@@ -53,13 +65,24 @@ const I18N = {
     subtitle: 'AI photo bookkeeping · Shop ledger · Free AI model',
     keyNotSet: 'API Key not set', keySet: 'API Key saved',
     tabScan: 'Scan Receipt', tabAdd: 'Add Entry', tabLedger: 'Ledger', tabInventory: 'Inventory', tabStats: 'Stats',
-    keyTitle: '🔑 Free Gemini API Key (set once)',
-    keyDesc: 'ReceiptAI uses Google Gemini free tier to read receipts. The key is stored only in your browser — never uploaded anywhere.',
+    keyTitle: '🔑 AI model setup (set once)',
+    keyDesc: 'Pick an AI model and paste its key. Keys are stored only in your browser and sent only to that model\'s official API.',
+    providerLabel: 'AI model',
+    provGeminiOpt: 'Google Gemini (free · vision)',
+    provQwenOpt: 'Qwen (China · vision)',
+    provDeepseekOpt: 'DeepSeek (China · paste text)',
     keyStep1: 'Open', keyStep1b: ' and sign in with your Google account',
+    keyQwenStep1b: ' and sign in with your Alibaba Cloud account',
+    keyQwenStep2: 'Create a key under "API-KEY" — new users get free quota',
+    keyDeepseekStep1b: ', sign in and create an API key',
     keyStep2: 'Click "Create API key" to generate a free key (no card needed)',
     keyStep3: 'Paste the key below and click Save',
+    deepseekNote: 'DeepSeek\'s official API does not accept images yet. Paste the receipt/order text below and DeepSeek will turn it into bookkeeping data.',
+    deepseekNote2: 'DeepSeek cannot read images — paste the receipt/order text below.',
+    deepseekTextLabel: 'Paste receipt / order text',
+    deepseekTextPh: 'e.g. Haoyouduo Supermarket 2026-10-27\nCola 330ml x6 @3.5 = 21\nInstant noodles x10 @4 = 40\nTotal 61',
     save: 'Save', clearKey: 'Clear Key',
-    uploadTitle: '🧾 Upload a receipt photo', dropHint: 'Drag a receipt photo here, click to choose a file, or paste a screenshot with Ctrl+V',
+    uploadTitle: '🧾 Upload a receipt photo', uploadTitleText: '🧾 Paste receipt / order text', dropHint: 'Drag a receipt photo here, click to choose a file, or paste a screenshot with Ctrl+V',
     chooseFile: 'Choose image', removeImg: 'Change image', recognize: '✨ Recognize & Book',
     resultTitle: '✅ Recognition result (edit if needed, then save)',
     fMerchant: 'Merchant', fDate: 'Date', fType: 'Type', fCategory: 'Category', fTotal: 'Total (¥)',
@@ -67,7 +90,8 @@ const I18N = {
     itemsTitle: 'Line items', thItem: 'Item', thQty: 'Qty', thUnit: 'Unit price', thAmt: 'Amount', addItem: 'Add row',
     saveToLedger: 'Save to ledger',
     apiDocsTitle: '🔌 API docs (call from your ordering system)',
-    apiDocsDesc: 'Below is the full request to recognize one receipt. Replace YOUR_API_KEY with your free key and put the image in as base64. Photos go only to Google Gemini — no third-party server in between.',
+    apiDocsDesc: 'Below are the recognition requests for all three models (Gemini / Qwen read images, DeepSeek reads text). Replace YOUR_API_KEY with the key of the matching model. Images or text go only to that model\'s official API — no third-party server in between.',
+    apiDeepseekNote: 'DeepSeek\'s official API does not accept images. OCR or transcribe the receipt/order text first, then call:',
     copy: 'Copy', respTitle: 'Response example',
     manualTitle: '✏️ Add an entry manually', fAmount: 'Amount (¥)', saveEntry: 'Save entry',
     calcTitle: '🧮 Profit calculator', calcDesc: 'Enter sell price and cost price; profit and margins are computed automatically.',
@@ -87,7 +111,7 @@ const I18N = {
     profitSummaryTitle: '💰 Profit summary',
     receiptTitle: 'E-Receipt', receiptThanks: 'Thank you, come again!',
     downloadImg: 'Download image', print: 'Print', close: 'Close', cancel: 'Cancel', editTitle: 'Edit entry',
-    footer: 'ReceiptAI · Data lives only in your browser · Key goes only to Google Gemini · Free tier · MIT open source',
+    footer: 'ReceiptAI · Data lives only in your browser · Keys go only to the selected model\'s official API · MIT open source',
     sumIncome: 'Income (month)', sumExpense: 'Expense (month)', sumNet: 'Net profit', sumMargin: 'Overall margin',
     sumSales: 'Total sales', sumCost: 'Total cost', sumGross: 'Gross profit',
     noData: 'No data yet', lowStock: 'Low stock', soldOut: 'Sold out',
@@ -103,11 +127,45 @@ let lang = localStorage.getItem('receiptai_lang') || 'zh';
 const t = k => (I18N[lang] && I18N[lang][k]) || I18N.zh[k] || k;
 
 /* ---------------- storage ---------------- */
-const LS = { key: 'receiptai_key', ledger: 'receiptai_ledger_v1', products: 'receiptai_products_v1' };
+const LS = { ledger: 'receiptai_ledger_v1', products: 'receiptai_products_v1' };
 const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
 const save = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 let ledger = load(LS.ledger, []);
 let products = load(LS.products, []);
+
+/* ---------------- AI providers ---------------- */
+const PROVIDERS = {
+  gemini: {
+    id: 'gemini', label: 'Google Gemini', vision: true,
+    keyUrl: 'https://aistudio.google.com/apikey',
+    models: ['gemini-2.0-flash', 'gemini-1.5-flash'],
+  },
+  qwen: {
+    id: 'qwen', label: '通义千问 Qwen', vision: true,
+    keyUrl: 'https://bailian.console.aliyun.com/',
+    endpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+    models: ['qwen-vl-max', 'qwen2.5-vl-72b-instruct'],
+  },
+  deepseek: {
+    id: 'deepseek', label: 'DeepSeek', vision: false,
+    keyUrl: 'https://platform.deepseek.com/api_keys',
+    endpoint: 'https://api.deepseek.com/v1/chat/completions',
+    models: ['deepseek-chat'],
+  },
+};
+let provider = localStorage.getItem('receiptai_provider') || 'gemini';
+if (!PROVIDERS[provider]) provider = 'gemini';
+const LS_KEY = {
+  gemini: 'receiptai_key_gemini',
+  qwen: 'receiptai_key_qwen',
+  deepseek: 'receiptai_key_deepseek',
+};
+/* migrate the old single Gemini key (pre multi-provider) */
+if (!localStorage.getItem(LS_KEY.gemini) && localStorage.getItem('receiptai_key')) {
+  localStorage.setItem(LS_KEY.gemini, localStorage.getItem('receiptai_key'));
+  localStorage.removeItem('receiptai_key');
+}
+const providerKey = p => localStorage.getItem(LS_KEY[p]) || '';
 
 /* ---------------- helpers ---------------- */
 const $ = id => document.getElementById(id);
@@ -148,6 +206,12 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
   $('langBtn').textContent = lang === 'zh' ? 'English' : '中文';
   document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+  const ps = $('providerSelect');
+  ps.querySelector('option[value="gemini"]').textContent = t('provGeminiOpt');
+  ps.querySelector('option[value="qwen"]').textContent = t('provQwenOpt');
+  ps.querySelector('option[value="deepseek"]').textContent = t('provDeepseekOpt');
+  $('uploadCardTitle').textContent = PROVIDERS[provider].vision ? t('uploadTitle') : t('uploadTitleText');
+  refreshKeyBadge();
   fillCategorySelects();
   renderAll();
 }
@@ -189,30 +253,49 @@ $('tabs').addEventListener('click', e => {
   if (btn.dataset.tab === 'inventory') renderInventory();
 });
 
-/* ---------------- API key ---------------- */
+/* ---------------- provider + API keys ---------------- */
+function setProvider(p) {
+  if (!PROVIDERS[p]) p = 'gemini';
+  provider = p;
+  localStorage.setItem('receiptai_provider', p);
+  $('providerSelect').value = p;
+  Object.keys(PROVIDERS).forEach(id => $('prov-' + id).classList.toggle('hidden', id !== p));
+  $('imageUploadWrap').classList.toggle('hidden', !PROVIDERS[p].vision);
+  $('deepseekTextWrap').classList.toggle('hidden', PROVIDERS[p].vision);
+  $('uploadCardTitle').textContent = PROVIDERS[p].vision ? t('uploadTitle') : t('uploadTitleText');
+  $('keyHint').textContent = '';
+  refreshKeyBadge();
+}
+$('providerSelect').addEventListener('change', e => setProvider(e.target.value));
+
 function refreshKeyBadge() {
-  const has = !!localStorage.getItem(LS.key);
+  const has = !!providerKey(provider);
   const b = $('keyBadge');
-  b.textContent = has ? t('keySet') : t('keyNotSet');
+  b.textContent = PROVIDERS[provider].label + ' · ' + (has ? t('keySet') : t('keyNotSet'));
   b.className = 'badge ' + (has ? 'badge-on' : 'badge-off');
 }
-$('saveKeyBtn').addEventListener('click', () => {
-  const v = $('apiKeyInput').value.trim();
+document.querySelectorAll('.save-key-btn').forEach(btn => btn.addEventListener('click', () => {
+  const p = btn.dataset.provider;
+  const input = $('apiKeyInput-' + p);
+  const v = input.value.trim();
   if (!v) { $('keyHint').textContent = lang === 'zh' ? '请先粘贴 Key' : 'Paste your key first'; return; }
-  localStorage.setItem(LS.key, v);
-  $('apiKeyInput').value = '';
-  $('keyHint').textContent = lang === 'zh' ? '✅ 已保存到浏览器本地' : '✅ Saved in this browser only';
+  localStorage.setItem(LS_KEY[p], v);
+  input.value = '';
+  $('keyHint').textContent = lang === 'zh'
+    ? `✅ ${PROVIDERS[p].label} Key 已保存到浏览器本地`
+    : `✅ ${PROVIDERS[p].label} key saved in this browser only`;
   refreshKeyBadge();
-});
-$('clearKeyBtn').addEventListener('click', () => {
-  localStorage.removeItem(LS.key);
-  $('keyHint').textContent = lang === 'zh' ? 'Key 已清除' : 'Key cleared';
+}));
+document.querySelectorAll('.clear-key-btn').forEach(btn => btn.addEventListener('click', () => {
+  const p = btn.dataset.provider;
+  localStorage.removeItem(LS_KEY[p]);
+  $('keyHint').textContent = lang === 'zh' ? `${PROVIDERS[p].label} Key 已清除` : `${PROVIDERS[p].label} key cleared`;
   refreshKeyBadge();
-});
-$('toggleKeyBtn').addEventListener('click', () => {
-  const i = $('apiKeyInput');
+}));
+document.querySelectorAll('.toggle-key-btn').forEach(btn => btn.addEventListener('click', () => {
+  const i = $('apiKeyInput-' + btn.dataset.provider);
   i.type = i.type === 'password' ? 'text' : 'password';
-});
+}));
 
 /* ---------------- image upload ---------------- */
 let currentImage = null; // {base64, mime}
@@ -251,30 +334,52 @@ $('removeImgBtn').addEventListener('click', () => {
   $('resultCard').classList.add('hidden');
 });
 
-/* ---------------- Gemini recognize ---------------- */
+/* ---------------- AI recognize (multi-provider) ---------------- */
 const GEMINI_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+const QWEN_MODELS = ['qwen-vl-max', 'qwen2.5-vl-72b-instruct'];
 const RECEIPT_PROMPT = `You are a bookkeeping assistant. Read this receipt/bill photo carefully and extract structured data.
 Reply with JSON ONLY, no markdown fences, no explanation:
 {"merchant": string, "date": "YYYY-MM-DD", "items": [{"name": string, "qty": number, "unit_price": number, "amount": number}], "subtotal": number, "tax": number, "total": number, "currency": string, "category": string}
 Rules: date — use the date printed on the receipt; if none, use today. category — pick the best of: 进货, 餐饮, 日用, 交通, 其他. If a field is unknown use null. Amounts as numbers.`;
+const RECEIPT_TEXT_PROMPT = `You are a bookkeeping assistant. The user pasted the text of a receipt/bill/order below. Extract structured data.
+Reply with JSON ONLY, no markdown fences, no explanation:
+{"merchant": string, "date": "YYYY-MM-DD", "items": [{"name": string, "qty": number, "unit_price": number, "amount": number}], "subtotal": number, "tax": number, "total": number, "currency": string, "category": string}
+Rules: date — use the date in the text; if none, use today. category — pick the best of: 进货, 餐饮, 日用, 交通, 其他. If a field is unknown use null. Amounts as numbers.
+Receipt text:
+`;
 
 function setStatus(el, msg, kind) { el.textContent = msg; el.className = 'status ' + (kind || ''); }
+function parseJsonLoose(raw) {
+  return JSON.parse(String(raw || '').replace(/```json|```/g, '').trim());
+}
+async function safeJson(res) { try { return await res.json(); } catch (e) { return {}; } }
+function classifyError(err) {
+  if (err && err.code) return err.code;
+  if (err && (err.status === 401 || err.status === 403)) return 'invalid_key';
+  if (err && err.status === 429) return 'quota';
+  const msg = String(err?.message || err || '');
+  if (/401|unauthorized|API key not valid|API_KEY_INVALID|invalid.api.key|invalid_api_key|Authentication Fails/i.test(msg)) return 'invalid_key';
+  if (/429|quota|RESOURCE_EXHAUSTED|insufficient_quota|rate limit/i.test(msg)) return 'quota';
+  if (/Failed to fetch|NetworkError|network|Load failed/i.test(msg)) return 'network';
+  return 'other';
+}
+function providerErrorHint(p, err) {
+  const code = classifyError(err);
+  const msg = String(err?.message || err || '');
+  if (code === 'invalid_key') return lang === 'zh'
+    ? `${PROVIDERS[p].label} 的 Key 无效：请检查 Key 是否复制完整，或重新生成一个。`
+    : `Invalid ${PROVIDERS[p].label} key: check it was copied fully, or generate a new one.`;
+  if (code === 'quota') return lang === 'zh'
+    ? '免费额度用完了：该模型的免费套餐有次数上限，稍后再试，或换一个 Key。'
+    : 'Free quota exhausted: this model\'s free tier has a limit — try again later or use another key.';
+  if (code === 'network') return lang === 'zh'
+    ? '网络连接失败：请检查网络后重试（需要能访问对应模型官方接口）。'
+    : 'Network error: check your connection and retry (the model\'s official API must be reachable).';
+  return (lang === 'zh' ? '识别失败：' : 'Recognition failed: ') + msg;
+}
 
-$('recognizeBtn').addEventListener('click', async () => {
-  const key = localStorage.getItem(LS.key);
-  const st = $('scanStatus');
-  if (!key) {
-    setStatus(st, lang === 'zh' ? '⚠️ 请先在上方设置免费 Gemini API Key（Google AI Studio 申请，免费、无需绑卡）。' : '⚠️ Set your free Gemini API key above first (Google AI Studio, free, no card).', 'err');
-    return;
-  }
-  if (!currentImage) {
-    setStatus(st, lang === 'zh' ? '⚠️ 请先上传一张票据照片。' : '⚠️ Upload a receipt photo first.', 'err');
-    return;
-  }
-  const btn = $('recognizeBtn');
-  btn.disabled = true;
-  setStatus(st, lang === 'zh' ? '⏳ 正在识别，请稍候…' : '⏳ Recognizing, please wait…', 'busy');
-  let lastErr = null, data = null;
+async function recognizeGemini(key) {
+  let lastErr = null;
   for (const model of GEMINI_MODELS) {
     try {
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`, {
@@ -288,22 +393,86 @@ $('recognizeBtn').addEventListener('click', async () => {
           generationConfig: { response_mime_type: 'application/json', temperature: 0.1 }
         })
       });
-      const json = await res.json();
-      if (!res.ok) { lastErr = json.error || {}; throw new Error(json.error?.message || ('HTTP ' + res.status)); }
+      const json = await safeJson(res);
+      if (!res.ok) { const e = new Error(json.error?.message || ('HTTP ' + res.status)); e.status = res.status; e.code = classifyError(e); throw e; }
       const raw = json.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      data = JSON.parse(raw.replace(/```json|```/g, '').trim());
-      break;
-    } catch (err) { lastErr = err; data = null; }
+      return parseJsonLoose(raw);
+    } catch (err) { lastErr = err; }
   }
+  throw lastErr;
+}
+
+async function recognizeQwen(key) {
+  let lastErr = null;
+  for (const model of QWEN_MODELS) {
+    try {
+      const res = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: 'user', content: [
+            { type: 'image_url', image_url: { url: `data:${currentImage.mime};base64,${currentImage.base64}` } },
+            { type: 'text', text: RECEIPT_PROMPT }
+          ] }]
+        })
+      });
+      const json = await safeJson(res);
+      if (!res.ok) { const e = new Error(json.error?.message || ('HTTP ' + res.status)); e.status = res.status; e.code = classifyError(e); throw e; }
+      const raw = json.choices?.[0]?.message?.content || '';
+      return parseJsonLoose(raw);
+    } catch (err) { lastErr = err; }
+  }
+  throw lastErr;
+}
+
+async function recognizeDeepSeek(key, text) {
+  const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [{ role: 'user', content: RECEIPT_TEXT_PROMPT + text }],
+      temperature: 0.1,
+      response_format: { type: 'json_object' }
+    })
+  });
+  const json = await safeJson(res);
+  if (!res.ok) { const e = new Error(json.error?.message || ('HTTP ' + res.status)); e.status = res.status; e.code = classifyError(e); throw e; }
+  const raw = json.choices?.[0]?.message?.content || '';
+  return parseJsonLoose(raw);
+}
+
+$('recognizeBtn').addEventListener('click', async () => {
+  const key = providerKey(provider);
+  const st = $('scanStatus');
+  if (!key) {
+    setStatus(st, lang === 'zh'
+      ? `⚠️ 请先在上方设置 ${PROVIDERS[provider].label} 的 API Key。`
+      : `⚠️ Set your ${PROVIDERS[provider].label} API key above first.`, 'err');
+    return;
+  }
+  if (provider === 'deepseek') {
+    if (!$('deepseekText').value.trim()) {
+      setStatus(st, lang === 'zh' ? '⚠️ 请先在上方粘贴小票或订单文字。' : '⚠️ Paste the receipt/order text above first.', 'err');
+      return;
+    }
+  } else if (!currentImage) {
+    setStatus(st, lang === 'zh' ? '⚠️ 请先上传一张票据照片。' : '⚠️ Upload a receipt photo first.', 'err');
+    return;
+  }
+  const btn = $('recognizeBtn');
+  btn.disabled = true;
+  setStatus(st, lang === 'zh' ? '⏳ 正在识别，请稍候…' : '⏳ Recognizing, please wait…', 'busy');
+  let data = null, lastErr = null;
+  try {
+    if (provider === 'gemini') data = await recognizeGemini(key);
+    else if (provider === 'qwen') data = await recognizeQwen(key);
+    else data = await recognizeDeepSeek(key, $('deepseekText').value.trim());
+  } catch (err) { lastErr = err; }
   btn.disabled = false;
   if (!data) {
-    const msg = String(lastErr?.message || lastErr || '');
-    let hint;
-    if (/API key not valid|API_KEY_INVALID/i.test(msg)) hint = lang === 'zh' ? 'Key 无效：请检查 Key 是否复制完整，或重新在 Google AI Studio 生成一个。' : 'Invalid API key: check it was copied fully, or generate a new one in Google AI Studio.';
-    else if (/quota|429|RESOURCE_EXHAUSTED/i.test(msg)) hint = lang === 'zh' ? '免费额度用完了：Gemini 免费套餐每天有次数上限，明天再试，或换一个 Google 账号的 Key。' : 'Free quota exhausted: the Gemini free tier has a daily limit — try again tomorrow or use a key from another Google account.';
-    else if (/Failed to fetch|NetworkError|network/i.test(msg)) hint = lang === 'zh' ? '网络连接失败：请检查网络后重试（需要能访问 Google 服务）。' : 'Network error: check your connection and retry (Google services must be reachable).';
-    else hint = (lang === 'zh' ? '识别失败：' : 'Recognition failed: ') + msg;
-    setStatus(st, '❌ ' + hint, 'err');
+    setStatus(st, '❌ ' + providerErrorHint(provider, lastErr), 'err');
     return;
   }
   fillResultForm(data);
@@ -723,6 +892,7 @@ function seedDemo() {
   if (params.get('demo') === '1') seedDemo();
   $('mDate').value = todayStr();
   $('sellDate').value = todayStr();
+  setProvider(provider);
   refreshKeyBadge();
   applyI18n();
   updateCalc();
